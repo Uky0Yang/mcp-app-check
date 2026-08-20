@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp-app-check"
+version = "0.1.0"
+description = "Static readiness and security checks for MCP Apps projects"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Uky0Yang" }]
+keywords = ["mcp", "mcp-apps", "model-context-protocol", "security", "static-analysis", "developer-tools"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Security",
+  "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.scripts]
+mcp-app-check = "mcp_app_check.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Uky0Yang/mcp-app-check"
+Issues = "https://github.com/Uky0Yang/mcp-app-check/issues"
+Source = "https://github.com/Uky0Yang/mcp-app-check"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mcp_app_check"]

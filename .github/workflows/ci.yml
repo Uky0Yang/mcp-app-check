@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -t . -v
+      - name: Compile Python sources
+        run: python -m compileall -q mcp_app_check tests
+      - name: Smoke test ready example
+        run: python -m mcp_app_check examples/ready-app --fail-on warning
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check "build>=1.5,<2" "twine>=7,<8" "ruff>=0.16,<0.17"
+      - run: ruff format --check mcp_app_check tests
+      - run: ruff check mcp_app_check tests
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: Wheel smoke test
+        shell: bash
+        run: |
+          python -m venv /tmp/mcp-app-check-venv
+          /tmp/mcp-app-check-venv/bin/python -m pip install --disable-pip-version-check dist/*.whl
+          /tmp/mcp-app-check-venv/bin/mcp-app-check examples/ready-app --fail-on warning

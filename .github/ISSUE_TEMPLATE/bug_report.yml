@@ -1,0 +1,46 @@
+name: Bug report
+description: 报告可复现的误报、漏报或 CLI 问题
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 请删除或替换所有真实 token、私有配置和客户数据。
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: mcp-app-check 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows
+        - Linux
+        - macOS
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 最小复现
+      description: 提供脱敏后的最小文件和完整命令。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期与实际结果
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: 安全确认
+      options:
+        - label: 我已移除真实凭证和私人数据。
+          required: true
