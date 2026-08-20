@@ -46,3 +46,13 @@ jobs:
           python -m venv /tmp/mcp-app-check-venv
           /tmp/mcp-app-check-venv/bin/python -m pip install --disable-pip-version-check dist/*.whl
           /tmp/mcp-app-check-venv/bin/mcp-app-check examples/ready-app --fail-on warning
+
+  action-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run local composite action
+        uses: ./
+        with:
+          path: examples/ready-app
+          fail-on: warning

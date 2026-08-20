@@ -89,12 +89,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: Uky0Yang/mcp-app-check@v0.1.0
         with:
-          python-version: "3.12"
-      - run: python -m pip install git+https://github.com/Uky0Yang/mcp-app-check.git
-      - run: mcp-app-check . --fail-on warning
+          path: .
+          fail-on: warning
 ```
+
+Action 支持 `path`、`fail-on` 和 `format` 三个 inputs。发布工作流建议固定到版本 tag，不要直接依赖持续变化的 `main`。
 
 ## 支持范围与边界
 

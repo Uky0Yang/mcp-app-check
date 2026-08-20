@@ -8,12 +8,12 @@
 - [x] CSP、敏感浏览器权限与常见密钥风险检查
 - [x] 中文文本报告和 JSON 输出
 - [x] 可配置 CI 失败阈值
+- [x] 可复用 GitHub Action wrapper
 - [x] Windows 与 Linux CI 覆盖的纯 Python 实现
 
 ## v0.2 — Planned
 
 - [ ] SARIF 输出和 GitHub Code Scanning 注释
-- [ ] 可复用 GitHub Action wrapper
 - [ ] 更完整的 TypeScript、Python 与 C# SDK 语法 fixture
 - [ ] `--ignore` 与受控配置文件
 - [ ] 在不泄露值的前提下增强 secret diagnostics
