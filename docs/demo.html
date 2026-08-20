@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <title>mcp-app-check demo</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif;
+        background: #07110f;
+        color: #ecfdf5;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at 88% 8%, rgb(16 185 129 / 18%), transparent 31%),
+          radial-gradient(circle at 4% 88%, rgb(6 182 212 / 13%), transparent 32%),
+          #07110f;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: 0.86fr 1.14fr;
+        gap: 44px;
+        height: 100%;
+        padding: 54px 58px;
+      }
+
+      .intro {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 31px;
+        color: #a7f3d0;
+        font-family: "Cascadia Code", Consolas, monospace;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .mark {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border: 1px solid #34d399;
+        border-radius: 9px;
+        background: rgb(16 185 129 / 12%);
+        box-shadow: 0 0 28px rgb(52 211 153 / 17%);
+      }
+
+      h1 {
+        max-width: 470px;
+        margin: 0 0 22px;
+        font-size: 48px;
+        line-height: 1.13;
+        letter-spacing: -0.045em;
+      }
+
+      .lead {
+        max-width: 430px;
+        margin: 0;
+        color: #a7b8b2;
+        font-size: 19px;
+        line-height: 1.65;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 31px;
+      }
+
+      .chip {
+        padding: 8px 12px;
+        border: 1px solid #25443a;
+        border-radius: 999px;
+        background: rgb(10 32 27 / 72%);
+        color: #b9d7cd;
+        font-size: 13px;
+      }
+
+      .terminal {
+        align-self: center;
+        min-height: 482px;
+        overflow: hidden;
+        border: 1px solid #25443a;
+        border-radius: 18px;
+        background: rgb(5 14 12 / 92%);
+        box-shadow: 0 24px 72px rgb(0 0 0 / 38%);
+      }
+
+      .terminal-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 48px;
+        padding: 0 17px;
+        border-bottom: 1px solid #1b3029;
+        background: #0b1a16;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #26473c;
+      }
+
+      .terminal-title {
+        margin-left: 7px;
+        color: #75968b;
+        font-family: "Cascadia Code", Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .terminal-body {
+        padding: 22px 23px 23px;
+        font-family: "Cascadia Code", Consolas, "Microsoft YaHei", monospace;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .command {
+        margin-bottom: 19px;
+        color: #d9fbee;
+        white-space: nowrap;
+      }
+
+      .prompt {
+        color: #34d399;
+      }
+
+      .path,
+      .muted {
+        color: #78978d;
+      }
+
+      .summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 17px;
+        padding: 12px 14px;
+        border: 1px solid #1f4b3d;
+        border-radius: 10px;
+        background: rgb(16 185 129 / 8%);
+      }
+
+      .summary strong {
+        color: #6ee7b7;
+        font-size: 16px;
+      }
+
+      .summary span {
+        color: #9ab8ae;
+        font-size: 12px;
+      }
+
+      .checks {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px 18px;
+      }
+
+      .check {
+        overflow: hidden;
+        color: #b9cfc8;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .ok {
+        display: inline-block;
+        min-width: 34px;
+        margin-right: 7px;
+        color: #4ade80;
+        font-weight: 700;
+      }
+
+      .rule {
+        color: #5eead4;
+      }
+
+      footer {
+        margin-top: 20px;
+        color: #6f8d83;
+        font-size: 11px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="intro">
+        <div class="brand"><span class="mark">M</span> mcp-app-check</div>
+        <h1>提交前，扫清 MCP App 的协议坑。</h1>
+        <p class="lead">无依赖、只读、中文诊断。一次检查 UI 资源、MIME、工具关联、降级结果、CSP 与常见密钥风险。</p>
+        <div class="chips">
+          <span class="chip">Python 3.10+</span>
+          <span class="chip">SARIF 2.1.0</span>
+          <span class="chip">GitHub Actions</span>
+        </div>
+      </section>
+
+      <section class="terminal" aria-label="mcp-app-check 对 ready-app 的实际扫描结果">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="terminal-title">PowerShell · ready-app</span>
+        </div>
+        <div class="terminal-body">
+          <div class="command"><span class="prompt">PS&gt;</span> python -m mcp_app_check examples\ready-app --include-passes</div>
+          <div class="muted">已扫描 1 个文件 · examples\ready-app</div>
+          <div class="summary">
+            <strong>✓ 9 条规则全部通过</strong>
+            <span>errors=0 · warnings=0 · skipped=0</span>
+          </div>
+          <div class="checks">
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA001</span> ui:// UI 资源</div>
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA002</span> MCP App HTML MIME</div>
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA003</span> 工具与 UI 关联</div>
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA004</span> structuredContent</div>
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA005</span> 文本降级结果</div>
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA006</span> 敏感权限复核</div>
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA007</span> 外部来源 CSP</div>
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA008</span> CSP 无通配符</div>
+            <div class="check"><span class="ok">PASS</span><span class="rule">MCA009</span> 常见密钥格式</div>
+          </div>
+          <footer>静态规则通过不等于运行时兼容认证；仍需使用 Inspector 与目标客户端测试。</footer>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

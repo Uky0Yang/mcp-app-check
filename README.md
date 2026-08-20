@@ -10,6 +10,18 @@
 
 > English summary: a dependency-free static readiness and security checker for vendor-neutral MCP Apps projects, with CI-friendly JSON output and actionable Chinese diagnostics.
 
+![mcp-app-check 扫描 ready-app，9 条规则全部通过](docs/assets/mcp-app-check-demo.png)
+
+## 实测演示
+
+仓库内的 `examples/ready-app` 是一个最小、可扫描的 MCP App server 示例。下面这条命令会读取其源码并显示全部规则结果，不会安装依赖或执行示例代码：
+
+```powershell
+python -m mcp_app_check examples\ready-app --include-passes
+```
+
+当前示例结果为：扫描 1 个文件，9 条规则全部通过，`errors=0`、`warnings=0`、`skipped=0`。上方截图对应这条命令的实际输出；用于截图的无外部依赖页面保存在 [`docs/demo.html`](docs/demo.html)。静态规则通过不代表完整的运行时兼容认证。
+
 ## 为什么做这个项目
 
 [MCP Apps](https://github.com/modelcontextprotocol/ext-apps) 让 MCP 工具可以在对话中返回表单、图表和其他交互式 UI。协议涉及 `ui://` 资源、特定 MIME、工具与 UI 的元数据关联、结构化结果、文本降级和 iframe 通信边界；项目能运行，不代表这些契约都已经正确表达。
