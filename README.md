@@ -54,6 +54,9 @@ python -m mcp_app_check . --fail-on warning
 # 生成 JSON 报告
 python -m mcp_app_check . --format json --output reports\mcp-app-check.json
 
+# 生成 GitHub Code Scanning 可读取的 SARIF 2.1.0
+python -m mcp_app_check . --format sarif --output reports\mcp-app-check.sarif
+
 # 查看所有通过项
 python -m mcp_app_check . --include-passes
 ```
@@ -89,13 +92,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: Uky0Yang/mcp-app-check@v0.1.0
+      - uses: Uky0Yang/mcp-app-check@v0.2.0
         with:
           path: .
           fail-on: warning
 ```
 
-Action 支持 `path`、`fail-on` 和 `format` 三个 inputs。发布工作流建议固定到版本 tag，不要直接依赖持续变化的 `main`。
+Action 支持 `path`、`fail-on`、`format` 和可选 `output` 四个 inputs。发布工作流建议固定到版本 tag，不要直接依赖持续变化的 `main`。
+
+## GitHub Code Scanning
+
+下面的工作流生成 SARIF 并上传到 GitHub Code Scanning。`fail-on: none` 可以确保扫描发现问题后仍执行上传；如需同时阻塞合并，可在上传后再增加一个严格模式检查步骤。
+
+```yaml
+name: MCP App Code Scanning
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Uky0Yang/mcp-app-check@v0.2.0
+        with:
+          path: .
+          fail-on: none
+          format: sarif
+          output: mcp-app-check.sarif
+      - uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: mcp-app-check.sarif
+```
+
+为避免给来自 fork 的不可信 PR 提供写权限，上例只在同仓库 PR 或 `main` push 时上传。不要改用会检出并执行不可信 PR 代码的 `pull_request_target` 方案。
 
 ## 支持范围与边界
 
@@ -124,7 +162,7 @@ python -m mcp_app_check examples\ready-app --fail-on warning
 
 ## 路线图
 
-下一步候选包括 SARIF、可复用 GitHub Action、稳定版/draft profile、更多官方 SDK 语法覆盖和脱敏诊断。路线图是计划，不代表已经实现；详情见 [ROADMAP.md](ROADMAP.md)。
+下一步候选包括稳定版/draft profile、更多官方 SDK 语法覆盖和脱敏诊断。路线图是计划，不代表已经实现；详情见 [ROADMAP.md](ROADMAP.md)。
 
 ## 许可证
 
@@ -134,3 +172,5 @@ python -m mcp_app_check examples\ready-app --fail-on warning
 
 - [MCP Apps 官方仓库与规范](https://github.com/modelcontextprotocol/ext-apps)
 - [Model Context Protocol 官方规范](https://modelcontextprotocol.io/specification/)
+- [OASIS SARIF 2.1.0 Plus Errata 01](https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html)
+- [GitHub Code Scanning 的 SARIF 支持](https://docs.github.com/en/code-security/concepts/code-scanning/sarif-files)

@@ -16,9 +16,13 @@ inputs:
     required: false
     default: error
   format:
-    description: Report format (text or json)
+    description: Report format (text, json, or sarif)
     required: false
     default: text
+  output:
+    description: Optional report output file
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -38,4 +42,10 @@ runs:
         INPUT_PATH: ${{ inputs.path }}
         INPUT_FAIL_ON: ${{ inputs.fail-on }}
         INPUT_FORMAT: ${{ inputs.format }}
-      run: python -m mcp_app_check "$INPUT_PATH" --fail-on "$INPUT_FAIL_ON" --format "$INPUT_FORMAT"
+        INPUT_OUTPUT: ${{ inputs.output }}
+      run: |
+        args=("$INPUT_PATH" "--fail-on" "$INPUT_FAIL_ON" "--format" "$INPUT_FORMAT")
+        if [[ -n "$INPUT_OUTPUT" ]]; then
+          args+=("--output" "$INPUT_OUTPUT")
+        fi
+        python -m mcp_app_check "${args[@]}"

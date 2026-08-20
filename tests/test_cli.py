@@ -27,6 +27,16 @@ class CliTests(unittest.TestCase):
             self.assertEqual("1.0", payload["schema_version"])
             self.assertEqual(0, payload["summary"]["errors"])
 
+    def test_sarif_report_is_machine_readable(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            stdout = io.StringIO()
+
+            with contextlib.redirect_stdout(stdout):
+                main([directory, "--format", "sarif", "--fail-on", "none"])
+
+        payload = json.loads(stdout.getvalue())
+        self.assertEqual("2.1.0", payload["version"])
+
     def test_default_threshold_fails_on_errors(self) -> None:
         with (
             tempfile.TemporaryDirectory() as directory,

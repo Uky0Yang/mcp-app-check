@@ -56,3 +56,27 @@ jobs:
         with:
           path: examples/ready-app
           fail-on: warning
+          format: sarif
+          output: reports/action-smoke.sarif
+      - name: Validate Action SARIF output
+        run: python -c "import json; data=json.load(open('reports/action-smoke.sarif', encoding='utf-8')); assert data['version'] == '2.1.0'"
+
+  sarif-upload:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Generate SARIF with local action
+        uses: ./
+        with:
+          path: examples/ready-app
+          fail-on: none
+          format: sarif
+          output: reports/code-scanning.sarif
+      - name: Upload SARIF to Code Scanning
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: reports/code-scanning.sarif

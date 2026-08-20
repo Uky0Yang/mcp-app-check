@@ -33,6 +33,7 @@ python -m compileall -q mcp_app_check tests
 - 保持改动聚焦，不顺带重构无关模块。
 - 说明问题、实现和验证命令。
 - 确保测试、compileall、wheel build、示例 smoke check 和 Action self-smoke 通过。
+- 修改报告格式时，验证 JSON/SARIF schema version、severity 和源码位置映射。
 - 不提交真实 token、私有 MCP 配置、客户数据或生成目录。
 
 提交 PR 即表示你同意按本项目 MIT 许可证贡献代码。

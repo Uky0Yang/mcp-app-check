@@ -20,4 +20,5 @@ Run:
 python -m unittest discover -s tests -t . -v
 python -m compileall -q mcp_app_check tests
 python -m mcp_app_check examples\ready-app --fail-on warning
+python -m mcp_app_check examples\ready-app --format sarif --output reports\smoke.sarif --fail-on warning
 ```

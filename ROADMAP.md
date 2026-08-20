@@ -2,7 +2,7 @@
 
 路线图只表示候选方向，不代表已经实现或承诺发布时间。
 
-## v0.1 — Current
+## v0.1 — Released
 
 - [x] `ui://`、MIME、工具绑定和返回数据静态检查
 - [x] CSP、敏感浏览器权限与常见密钥风险检查
@@ -11,9 +11,14 @@
 - [x] 可复用 GitHub Action wrapper
 - [x] Windows 与 Linux CI 覆盖的纯 Python 实现
 
-## v0.2 — Planned
+## v0.2 — Current
 
-- [ ] SARIF 输出和 GitHub Code Scanning 注释
+- [x] SARIF 2.1.0 输出和源码位置映射
+- [x] GitHub Action 可选报告输出文件
+- [x] GitHub Code Scanning 上传示例
+
+## Next — Planned
+
 - [ ] 更完整的 TypeScript、Python 与 C# SDK 语法 fixture
 - [ ] `--ignore` 与受控配置文件
 - [ ] 在不泄露值的前提下增强 secret diagnostics
