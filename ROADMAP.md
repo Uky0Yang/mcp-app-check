@@ -17,10 +17,11 @@
 - [x] GitHub Action 可选报告输出文件
 - [x] GitHub Code Scanning 上传示例
 - [x] 官方 TypeScript `RESOURCE_MIME_TYPE` 与 `registerAppResource` 默认 MIME
+- [x] 官方 Python FastMCP `TextContent` 文本降级识别
 
 ## Next — Planned
 
-- [ ] 更完整的 Python 与 C# SDK 语法 fixture
+- [ ] 更多 Python 边界用例与 C# SDK 语法 fixture
 - [ ] `--ignore` 与受控配置文件
 - [ ] 在不泄露值的前提下增强 secret diagnostics
 

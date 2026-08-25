@@ -91,6 +91,8 @@ python -m mcp_app_check . --include-passes
 
 TypeScript 项目可以直接使用官方 `@modelcontextprotocol/ext-apps/server` 导出的 `RESOURCE_MIME_TYPE`，也可以依赖 `registerAppResource` 的默认 MCP App MIME；`MCA002` 会识别这两种官方写法。只有导入但没有使用 constant，仍不会被视为通过。
 
+Python FastMCP 项目中，`MCA005` 会识别通过 `from mcp import types` 构造的 `types.TextContent(...)`，以及从 `mcp.types` 直接导入后构造的 `TextContent(...)`。仅有类型注解或 HTML 的 `content=` 属性不会被视为工具的文本降级结果。
+
 ## GitHub Actions
 
 ```yaml
@@ -106,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: Uky0Yang/mcp-app-check@v0.2.1
+      - uses: Uky0Yang/mcp-app-check@v0.2.2
         with:
           path: .
           fail-on: warning
@@ -136,7 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: Uky0Yang/mcp-app-check@v0.2.1
+      - uses: Uky0Yang/mcp-app-check@v0.2.2
         with:
           path: .
           fail-on: none
@@ -176,7 +178,7 @@ python -m mcp_app_check examples\ready-app --fail-on warning
 
 ## 路线图
 
-下一步候选包括稳定版/draft profile、更多 Python/C# SDK 语法 fixture 和脱敏诊断。路线图是计划，不代表已经实现；详情见 [ROADMAP.md](ROADMAP.md)。
+下一步候选包括稳定版/draft profile、更多 Python 边界用例、C# SDK 语法 fixture 和脱敏诊断。路线图是计划，不代表已经实现；详情见 [ROADMAP.md](ROADMAP.md)。
 
 ## 许可证
 

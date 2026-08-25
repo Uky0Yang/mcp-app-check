@@ -7,6 +7,9 @@ from pathlib import Path
 
 from mcp_app_check.rules import scan_repository
 from tests.fixtures import (
+    HTML_CONTENT_ATTRIBUTE_WITHOUT_TOOL_FALLBACK,
+    OFFICIAL_PYTHON_DIRECT_TEXT_CONTENT_APP,
+    OFFICIAL_PYTHON_FASTMCP_APP,
     OFFICIAL_TYPESCRIPT_DEFAULT_MIME_APP,
     OFFICIAL_TYPESCRIPT_HELPERS_APP,
     OFFICIAL_TYPESCRIPT_UNUSED_MIME_IMPORT_APP,
@@ -61,6 +64,21 @@ class ScannerTests(unittest.TestCase):
         self.write("src/server.ts", OFFICIAL_TYPESCRIPT_UNUSED_MIME_IMPORT_APP)
 
         self.assertIn("MCA002", self.active_rules())
+
+    def test_python_fastmcp_text_content_is_a_text_fallback(self) -> None:
+        self.write("server.py", OFFICIAL_PYTHON_FASTMCP_APP)
+
+        self.assertNotIn("MCA005", self.active_rules())
+
+    def test_html_content_attribute_is_not_a_text_fallback(self) -> None:
+        self.write("server.ts", HTML_CONTENT_ATTRIBUTE_WITHOUT_TOOL_FALLBACK)
+
+        self.assertIn("MCA005", self.active_rules())
+
+    def test_direct_python_text_content_import_is_a_text_fallback(self) -> None:
+        self.write("server.py", OFFICIAL_PYTHON_DIRECT_TEXT_CONTENT_APP)
+
+        self.assertNotIn("MCA005", self.active_rules())
 
     def test_empty_directory_reports_required_protocol_signals(self) -> None:
         report = self.report()

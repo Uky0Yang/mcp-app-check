@@ -85,8 +85,14 @@ MIME_CONSTANT_USE = re.compile(
 )
 RESOURCE_URI_FIELD = re.compile(r"\b(?:resourceUri|resource_uri)\b")
 STRUCTURED_CONTENT = re.compile(r"\b(?:structuredContent|structured_content)\b")
-CONTENT_FIELD = re.compile(r"\bcontent\s*[:=]")
+CONTENT_FIELD = re.compile(r"\bcontent\s*[:=]\s*\[")
 TEXT_FIELD = re.compile(r"\btext\s*[:=]")
+MCP_TYPES_IMPORT = re.compile(r"\bfrom\s+mcp\s+import\s+types\b")
+MCP_TYPES_TEXT_CONTENT = re.compile(r"\btypes\.TextContent\s*\(")
+MCP_TEXT_CONTENT_IMPORT = re.compile(
+    r"\bfrom\s+mcp\.types\s+import\s+[^\n]*\bTextContent\b"
+)
+MCP_TEXT_CONTENT = re.compile(r"(?<!\.)\bTextContent\s*\(")
 SENSITIVE_PERMISSIONS = re.compile(
     r"\bpermissions\b\s*[:=]\s*\{.{0,500}?\b(?:camera|microphone|geolocation|clipboardWrite|clipboard_write)\b\s*[:=]",
     re.DOTALL,
@@ -236,6 +242,25 @@ def _tool_binding(snapshot: RepositorySnapshot) -> Finding:
 
 
 def _text_fallback(snapshot: RepositorySnapshot) -> Finding:
+    for source in snapshot.files:
+        text_content = MCP_TYPES_TEXT_CONTENT.search(source.text)
+        if text_content is not None and MCP_TYPES_IMPORT.search(source.text):
+            return _finding(
+                "MCA005",
+                "pass",
+                "已检测到 FastMCP TextContent 文本降级结果。",
+                source,
+                text_content,
+            )
+        text_content = MCP_TEXT_CONTENT.search(source.text)
+        if text_content is not None and MCP_TEXT_CONTENT_IMPORT.search(source.text):
+            return _finding(
+                "MCA005",
+                "pass",
+                "已检测到 FastMCP TextContent 文本降级结果。",
+                source,
+                text_content,
+            )
     content_match = _first_match(snapshot.files, CONTENT_FIELD)
     text_match = _first_match(snapshot.files, TEXT_FIELD)
     if content_match is not None and text_match is not None:

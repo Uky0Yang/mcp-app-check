@@ -84,3 +84,45 @@ server.registerTool("weather", {
   structuredContent: { condition: "sunny" },
 }));
 """.strip()
+
+
+OFFICIAL_PYTHON_FASTMCP_APP = """
+from mcp import types
+from mcp.server.fastmcp import FastMCP
+
+VIEW_URI = "ui://say-demo/view.html"
+mcp = FastMCP("Say Demo")
+
+
+@mcp.tool(meta={"ui": {"resourceUri": VIEW_URI}})
+def say(text: str) -> list[types.TextContent]:
+    return [types.TextContent(type="text", text=f"Spoke: {text}")]
+
+
+@mcp.resource(VIEW_URI, mime_type="text/html;profile=mcp-app")
+def view() -> str:
+    return "<html><body>Say demo</body></html>"
+""".strip()
+
+OFFICIAL_PYTHON_DIRECT_TEXT_CONTENT_APP = OFFICIAL_PYTHON_FASTMCP_APP.replace(
+    "from mcp import types", "from mcp.types import TextContent"
+).replace("types.TextContent", "TextContent")
+
+
+HTML_CONTENT_ATTRIBUTE_WITHOUT_TOOL_FALLBACK = """
+const RESOURCE_URI = "ui://weather/dashboard.html";
+
+server.registerResource("weather-ui", RESOURCE_URI, {}, async () => ({
+  contents: [{
+    uri: RESOURCE_URI,
+    mimeType: "text/html;profile=mcp-app",
+    text: "<html><head><meta content='light dark'></head></html>",
+  }],
+}));
+
+server.registerTool("weather", {
+  _meta: { ui: { resourceUri: RESOURCE_URI } },
+}, async () => ({
+  structuredContent: { condition: "sunny" },
+}));
+""".strip()
