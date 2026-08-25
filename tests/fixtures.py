@@ -126,3 +126,16 @@ server.registerTool("weather", {
   structuredContent: { condition: "sunny" },
 }));
 """.strip()
+
+
+UNLOADED_EXTERNAL_URL_APP = (
+    READY_APP.replace(
+        '_meta: { ui: { csp: { connectDomains: ["https://api.example.com"] } } }',
+        "_meta: { ui: {} }",
+    )
+    + """
+
+const linkUrl = "https://modelcontextprotocol.io/";
+const schemaDescription = "Full guide: https://example.com/docs";
+"""
+)

@@ -83,7 +83,7 @@ python -m mcp_app_check . --include-passes
 | `MCA004` | warning | 工具是否返回 `structuredContent` |
 | `MCA005` | warning | 是否保留 `content` 文本降级结果 |
 | `MCA006` | warning | 是否声明 camera、microphone、geolocation 或 clipboard 权限 |
-| `MCA007` | warning | 使用外部 HTTPS 来源时是否声明 CSP |
+| `MCA007` | warning | 使用浏览器外部加载语法时是否声明 CSP |
 | `MCA008` | error | CSP 域列表是否包含通配符 |
 | `MCA009` | error | 源码是否包含常见密钥格式 |
 
@@ -92,6 +92,12 @@ python -m mcp_app_check . --include-passes
 TypeScript 项目可以直接使用官方 `@modelcontextprotocol/ext-apps/server` 导出的 `RESOURCE_MIME_TYPE`，也可以依赖 `registerAppResource` 的默认 MCP App MIME；`MCA002` 会识别这两种官方写法。只有导入但没有使用 constant，仍不会被视为通过。
 
 Python FastMCP 项目中，`MCA005` 会识别通过 `from mcp import types` 构造的 `types.TextContent(...)`，以及从 `mcp.types` 直接导入后构造的 `TextContent(...)`。仅有类型注解或 HTML 的 `content=` 属性不会被视为工具的文本降级结果。
+
+`MCA007` 只把直接包含 HTTPS literal 的 `fetch(...)`、`WebSocket(...)`、`EventSource(...)`、`src=`、stylesheet link 和 CSS `url(...)` 等明确加载语法视为外部来源。普通文档链接、`openLink` 目标和服务端数据 URL 不会触发这条规则。
+
+## 真实项目兼容性证据
+
+2026-08-25 的固定快照扫描覆盖 10 个公开仓库、38 个独立 MCP App surface 和 1,102 个源码文件，0 个文件跳过。核心 error 规则为 0；剩余 20 个 warning 是结构化结果、文本 fallback 或敏感权限复核信号。完整仓库、commit SHA、scope、结果解释和复现边界见 [COMPATIBILITY.md](COMPATIBILITY.md)。这份静态证据不等同于运行时兼容认证。
 
 ## GitHub Actions
 
@@ -108,7 +114,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: Uky0Yang/mcp-app-check@v0.2.2
+      - uses: Uky0Yang/mcp-app-check@v0.2.3
         with:
           path: .
           fail-on: warning
@@ -138,7 +144,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: Uky0Yang/mcp-app-check@v0.2.2
+      - uses: Uky0Yang/mcp-app-check@v0.2.3
         with:
           path: .
           fail-on: none

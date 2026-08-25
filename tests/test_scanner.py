@@ -14,6 +14,7 @@ from tests.fixtures import (
     OFFICIAL_TYPESCRIPT_HELPERS_APP,
     OFFICIAL_TYPESCRIPT_UNUSED_MIME_IMPORT_APP,
     READY_APP,
+    UNLOADED_EXTERNAL_URL_APP,
 )
 
 
@@ -113,6 +114,11 @@ class ScannerTests(unittest.TestCase):
         self.write("src/server.ts", without_csp)
 
         self.assertIn("MCA007", self.active_rules())
+
+    def test_unloaded_external_url_is_not_a_csp_warning(self) -> None:
+        self.write("src/server.ts", UNLOADED_EXTERNAL_URL_APP)
+
+        self.assertNotIn("MCA007", self.active_rules())
 
     def test_wildcard_csp_domain_is_an_error(self) -> None:
         unsafe = READY_APP.replace(

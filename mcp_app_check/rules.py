@@ -98,7 +98,11 @@ SENSITIVE_PERMISSIONS = re.compile(
     re.DOTALL,
 )
 EXTERNAL_URL = re.compile(
-    r"https://(?!localhost\b|127\.0\.0\.1\b)[A-Za-z0-9.-]+", re.IGNORECASE
+    r"(?:\bfetch\s*\(\s*|\b(?:WebSocket|EventSource)\s*\(\s*|"
+    r"\b(?:src|srcSet)\s*[:=]\s*|<link\b[^>]{0,240}\bhref\s*=\s*|"
+    r"\burl\s*\(\s*)"
+    r"[\"'`]https://(?!localhost\b|127\.0\.0\.1\b)[A-Za-z0-9.-]+",
+    re.IGNORECASE,
 )
 CSP_FIELD = re.compile(
     r"\b(?:csp|connectDomains|resourceDomains|connect_domains|resource_domains)\b"

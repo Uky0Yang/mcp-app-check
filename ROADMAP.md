@@ -18,6 +18,8 @@
 - [x] GitHub Code Scanning 上传示例
 - [x] 官方 TypeScript `RESOURCE_MIME_TYPE` 与 `registerAppResource` 默认 MIME
 - [x] 官方 Python FastMCP `TextContent` 文本降级识别
+- [x] 10 个公开仓库、38 个 App surface 的固定 SHA 兼容性扫描
+- [x] 区分外部资源加载与普通 HTTPS 字符串，降低 `MCA007` 误报
 
 ## Next — Planned
 
