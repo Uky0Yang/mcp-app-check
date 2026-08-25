@@ -6,7 +6,12 @@ import unittest
 from pathlib import Path
 
 from mcp_app_check.rules import scan_repository
-from tests.fixtures import READY_APP
+from tests.fixtures import (
+    OFFICIAL_TYPESCRIPT_DEFAULT_MIME_APP,
+    OFFICIAL_TYPESCRIPT_HELPERS_APP,
+    OFFICIAL_TYPESCRIPT_UNUSED_MIME_IMPORT_APP,
+    READY_APP,
+)
 
 
 class ScannerTests(unittest.TestCase):
@@ -39,6 +44,23 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(0, report.warning_count)
         self.assertTrue(report.ok)
         self.assertEqual(1, report.files_scanned)
+
+    def test_official_typescript_mime_constant_is_recognized(self) -> None:
+        self.write("src/server.ts", OFFICIAL_TYPESCRIPT_HELPERS_APP)
+
+        self.assertNotIn("MCA002", self.active_rules())
+
+    def test_official_typescript_resource_helper_default_mime_is_recognized(
+        self,
+    ) -> None:
+        self.write("src/server.ts", OFFICIAL_TYPESCRIPT_DEFAULT_MIME_APP)
+
+        self.assertNotIn("MCA002", self.active_rules())
+
+    def test_unused_official_typescript_mime_constant_is_not_recognized(self) -> None:
+        self.write("src/server.ts", OFFICIAL_TYPESCRIPT_UNUSED_MIME_IMPORT_APP)
+
+        self.assertIn("MCA002", self.active_rules())
 
     def test_empty_directory_reports_required_protocol_signals(self) -> None:
         report = self.report()

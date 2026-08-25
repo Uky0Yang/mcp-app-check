@@ -69,6 +69,20 @@ RULES = {
 
 UI_URI = re.compile(r"ui://[A-Za-z0-9._~!$&'()*+,;=:@/?%\-]+")
 MCP_APP_MIME = re.compile(r"text/html\s*;\s*profile=mcp-app", re.IGNORECASE)
+OFFICIAL_MIME_IMPORT = re.compile(
+    r"\bimport\s*\{[^}]*\bRESOURCE_MIME_TYPE\b[^}]*\}\s*from\s*"
+    r"(['\"])@modelcontextprotocol/ext-apps/server\1",
+    re.DOTALL,
+)
+OFFICIAL_RESOURCE_HELPER_IMPORT = re.compile(
+    r"\bimport\s*\{[^}]*\bregisterAppResource\b[^}]*\}\s*from\s*"
+    r"(['\"])@modelcontextprotocol/ext-apps/server\1",
+    re.DOTALL,
+)
+REGISTER_APP_RESOURCE_CALL = re.compile(r"\bregisterAppResource\s*\(")
+MIME_CONSTANT_USE = re.compile(
+    r"\b(?:mimeType|mime_type)\b\s*[:=]\s*RESOURCE_MIME_TYPE\b"
+)
 RESOURCE_URI_FIELD = re.compile(r"\b(?:resourceUri|resource_uri)\b")
 STRUCTURED_CONTENT = re.compile(r"\b(?:structuredContent|structured_content)\b")
 CONTENT_FIELD = re.compile(r"\bcontent\s*[:=]")
@@ -136,9 +150,7 @@ def scan_repository(
 def run_checks(snapshot: RepositorySnapshot) -> list[Finding]:
     findings = [
         _required_signal(snapshot, "MCA001", UI_URI, "已检测到 ui:// UI 资源。"),
-        _required_signal(
-            snapshot, "MCA002", MCP_APP_MIME, "已检测到 MCP App HTML MIME。"
-        ),
+        _mcp_app_mime(snapshot),
         _tool_binding(snapshot),
         _recommended_signal(
             snapshot, "MCA004", STRUCTURED_CONTENT, "已检测到 structuredContent。"
@@ -181,6 +193,35 @@ def _recommended_signal(
         source, found = match
         return _finding(rule_id, "pass", pass_message, source, found)
     return _finding(rule_id, RULES[rule_id].severity, RULES[rule_id].title)
+
+
+def _mcp_app_mime(snapshot: RepositorySnapshot) -> Finding:
+    literal_match = _first_match(snapshot.files, MCP_APP_MIME)
+    if literal_match is not None:
+        source, found = literal_match
+        return _finding("MCA002", "pass", "已检测到 MCP App HTML MIME。", source, found)
+    import_match = _first_match(snapshot.files, OFFICIAL_MIME_IMPORT)
+    if import_match is not None:
+        source, found = import_match
+        if MIME_CONSTANT_USE.search(source.text):
+            return _finding(
+                "MCA002",
+                "pass",
+                "已检测到官方 MCP Apps MIME constant。",
+                source,
+                found,
+            )
+    for source in snapshot.files:
+        helper_import = OFFICIAL_RESOURCE_HELPER_IMPORT.search(source.text)
+        if helper_import is not None and REGISTER_APP_RESOURCE_CALL.search(source.text):
+            return _finding(
+                "MCA002",
+                "pass",
+                "已检测到使用默认 MCP App MIME 的官方 resource helper。",
+                source,
+                helper_import,
+            )
+    return _finding("MCA002", RULES["MCA002"].severity, RULES["MCA002"].title)
 
 
 def _tool_binding(snapshot: RepositorySnapshot) -> Finding:
