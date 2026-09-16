@@ -23,8 +23,9 @@
 
 ## Next — Planned
 
+v0.3 已实现：`--ignore`、显式 JSON 配置和可见的 suppression 计数。
+
 - [ ] 更多 Python 边界用例与 C# SDK 语法 fixture
-- [ ] `--ignore` 与受控配置文件
 - [ ] 在不泄露值的前提下增强 secret diagnostics
 
 ## Later — Explore

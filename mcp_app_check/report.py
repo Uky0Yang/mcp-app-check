@@ -19,7 +19,7 @@ def render_json(report: ScanReport) -> str:
 def render_text(report: ScanReport, *, include_passes: bool = False) -> str:
     lines = [
         f"mcp-app-check 已扫描 {report.files_scanned} 个文件：{report.root}",
-        f"errors={report.error_count} warnings={report.warning_count} info={report.info_count} skipped={report.files_skipped}",
+        f"errors={report.error_count} warnings={report.warning_count} info={report.info_count} skipped={report.files_skipped} suppressed={report.findings_suppressed}",
     ]
     visible = [
         item for item in report.findings if include_passes or item.severity != "pass"

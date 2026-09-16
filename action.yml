@@ -7,6 +7,9 @@ branding:
   color: blue
 
 inputs:
+  config:
+    description: Explicit trusted JSON policy path
+    default: ""
   path:
     description: MCP Apps project directory to scan
     required: false
@@ -43,8 +46,10 @@ runs:
         INPUT_FAIL_ON: ${{ inputs.fail-on }}
         INPUT_FORMAT: ${{ inputs.format }}
         INPUT_OUTPUT: ${{ inputs.output }}
+        INPUT_CONFIG: ${{ inputs.config }}
       run: |
         args=("$INPUT_PATH" "--fail-on" "$INPUT_FAIL_ON" "--format" "$INPUT_FORMAT")
+        if [[ -n "$INPUT_CONFIG" ]]; then args+=(--config "$INPUT_CONFIG"); fi
         if [[ -n "$INPUT_OUTPUT" ]]; then
           args+=("--output" "$INPUT_OUTPUT")
         fi

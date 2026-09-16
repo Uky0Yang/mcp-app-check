@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import argparse
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 from . import __version__
 from .models import SEVERITY_ORDER, ScanReport
+from .policy import load_policy
 from .report import render_json, render_text
 from .rules import scan_repository
 from .sarif import render_sarif
@@ -27,9 +29,19 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--output", "-o", type=Path, help="将报告写入文件。")
     parser.add_argument(
+        "--config", type=Path, help="显式指定可信 JSON 配置；不会自动读取目标仓库配置。"
+    )
+    parser.add_argument(
+        "--ignore",
+        action="append",
+        default=[],
+        metavar="RULE_ID",
+        help="忽略规则，可重复使用。",
+    )
+    parser.add_argument(
         "--fail-on",
         choices=("none", "warning", "error"),
-        default="error",
+        default=None,
         help="达到此严重级别时返回退出码 1；默认 error。",
     )
     parser.add_argument(
@@ -54,10 +66,22 @@ def main(argv: list[str] | None = None) -> int:
     _configure_stdio()
     args = build_parser().parse_args(argv)
     try:
+        ignored, threshold = load_policy(args.config, args.ignore, args.fail_on)
         report = scan_repository(
             Path(args.path),
             max_files=args.max_files,
             max_file_bytes=args.max_file_bytes,
+        )
+        remaining = tuple(
+            item for item in report.findings if item.rule_id not in ignored
+        )
+        report = replace(
+            report,
+            findings=remaining,
+            findings_suppressed=sum(
+                item.rule_id in ignored and item.severity != "pass"
+                for item in report.findings
+            ),
         )
         if args.format == "json":
             output = render_json(report) + "\n"
@@ -69,7 +93,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError) as exc:
         print(f"mcp-app-check: {exc}", file=sys.stderr)
         return 2
-    return 1 if _fails(report, args.fail_on) else 0
+    return 1 if _fails(report, threshold) else 0
 
 
 def _configure_stdio() -> None:

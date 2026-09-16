@@ -19,6 +19,7 @@ def render_sarif(report: ScanReport) -> str:
         "version": "2.1.0",
         "runs": [
             {
+                "properties": {"findingsSuppressed": report.findings_suppressed},
                 "tool": {
                     "driver": {
                         "name": "mcp-app-check",

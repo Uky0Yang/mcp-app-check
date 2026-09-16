@@ -1,5 +1,7 @@
 # mcp-app-check
 
+新增：显式 JSON 配置、可重复的 `--ignore` 与可见的抑制计数。 [使用说明](docs/maintenance-2026-09.md).
+
 [![CI](https://github.com/Uky0Yang/mcp-app-check/actions/workflows/ci.yml/badge.svg)](https://github.com/Uky0Yang/mcp-app-check/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)

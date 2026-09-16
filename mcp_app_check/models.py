@@ -50,6 +50,7 @@ class ScanReport:
     files_scanned: int
     files_skipped: int
     findings: tuple[Finding, ...]
+    findings_suppressed: int = 0
 
     @property
     def error_count(self) -> int:
@@ -74,6 +75,7 @@ class ScanReport:
             "root": self.root,
             "files_scanned": self.files_scanned,
             "files_skipped": self.files_skipped,
+            "findings_suppressed": self.findings_suppressed,
             "summary": {
                 "errors": self.error_count,
                 "warnings": self.warning_count,
