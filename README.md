@@ -41,6 +41,15 @@ python -m mcp_app_check examples\ready-app --include-passes
 
 要求 Python 3.10 或更高版本。
 
+从 [PyPI](https://pypi.org/project/mcp-app-check/) 安装后即可扫描自己的项目：
+
+```powershell
+python -m pip install mcp-app-check
+mcp-app-check D:\path\to\your-mcp-app
+```
+
+也可以从源码运行（下文的仓库内置示例需要先克隆）：
+
 ```powershell
 git clone https://github.com/Uky0Yang/mcp-app-check.git
 cd mcp-app-check

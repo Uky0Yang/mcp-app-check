@@ -11,7 +11,7 @@
 - [x] 可复用 GitHub Action wrapper
 - [x] Windows 与 Linux CI 覆盖的纯 Python 实现
 
-## v0.2 — Current
+## v0.2 — Released
 
 - [x] SARIF 2.1.0 输出和源码位置映射
 - [x] GitHub Action 可选报告输出文件
@@ -21,9 +21,12 @@
 - [x] 10 个公开仓库、38 个 App surface 的固定 SHA 兼容性扫描
 - [x] 区分外部资源加载与普通 HTTPS 字符串，降低 `MCA007` 误报
 
-## Next — Planned
+## v0.3 — Released
 
-v0.3 已实现：`--ignore`、显式 JSON 配置和可见的 suppression 计数。
+- [x] `--ignore`、显式 JSON 配置和可见的 suppression 计数
+- [x] [PyPI v0.3.0](https://pypi.org/project/mcp-app-check/0.3.0/) 与 Trusted Publishing
+
+## Next — Planned
 
 - [ ] 更多 Python 边界用例与 C# SDK 语法 fixture
 - [ ] 在不泄露值的前提下增强 secret diagnostics
